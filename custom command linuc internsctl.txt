@@ -1,0 +1,91 @@
+
+VERSION="v.0.1.0"
+
+# Main function
+internsctl_main() {
+    echo "Interns Project $VERSION"
+    
+    echo "This is my technical project"
+}
+
+# Display the man page
+internsctl_man() {
+    echo "Intrens Project - Gives insights about interns project"
+    echo
+    echo "Usage: internsctl [options]"
+    echo
+    echo "Options:"
+    echo "  -h, --help        Display this help message for this project"
+    echo "  -v, --version     Display the version number for this project"
+    echo "  cpu               Get CPU information"
+    echo "  memory            Get memory information"
+    echo "  create-user       Create a new user"
+    echo "  list-users        List all users"
+    # Add more options and descriptions as needed
+}
+
+# Get CPU information
+internsctl_cpu_getinfo() {
+    echo "CPU Information:"
+    lscpu
+}
+
+# Get memory information
+internsctl_memory_getinfo() {
+    echo "Memory Information:"
+    free -m
+}
+
+# Create a new user
+create_user() {
+    read -p "Enter username: " username
+    read -s -p "Enter password: " password
+    echo
+    # Add user creation logic (e.g., useradd or adduser)
+    sudo useradd -m -p "$(openssl passwd -1 $password)" $username
+    echo "User '$username' created successfully."
+}
+
+# List all users
+list_users() {
+    echo "List of Users:"
+    users
+}
+
+# Process command-line arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -h|--help)
+            internsctl_man
+            exit 0
+            ;;
+        -v|--version)
+            echo "Interns Control Utility $VERSION"
+            exit 0
+            ;;
+        cpu_getinfo)
+            internsctl_cpu_getinfo
+            exit 0
+            ;;
+        memory_getinfo)
+            internsctl_memory_getinfo
+            exit 0
+            ;;
+        create-user)
+            create_user
+            exit 0
+            ;;
+        list-users)
+            list_users
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1. Use -h or --help for help."
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+# Execute the main function if no option is specified
+internsctl_main "$@"
